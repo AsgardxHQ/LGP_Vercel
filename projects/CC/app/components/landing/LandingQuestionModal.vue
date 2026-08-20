@@ -1,0 +1,200 @@
+<script setup lang="ts">
+import { computed, nextTick, ref, watch } from 'vue'
+import { siteFlowConfig } from '../../utils/site-taxonomy'
+import { pathForPageName } from '../../utils/page-flow'
+import { useFlowAnswers } from '../../utils/usePageFlow'
+
+const props = defineProps<{
+  open: boolean
+}>()
+
+const emit = defineEmits<{
+  close: []
+}>()
+
+const router = useRouter()
+const answers = useFlowAnswers()
+const currentIndex = ref(0)
+const draftValue = ref('')
+const draftEmail = ref('')
+const draftPhone = ref('')
+const inputElement = ref<HTMLInputElement | null>(null)
+
+const questions = siteFlowConfig.questions.filter((question) => question.id !== 'phone')
+const totalSteps = questions.length
+
+const answerKeyForQuestion = (questionId: string) => {
+  if (questionId === 'categories') return 'category'
+  if (questionId === 'subcategories') return 'subcategory'
+  if (questionId === 'fullname') return 'fullName'
+  return questionId
+}
+
+const answerKey = computed(() => {
+  const question = questions[currentIndex.value]
+  return question ? answerKeyForQuestion(question.id) : undefined
+})
+
+const currentQuestion = computed(() => questions[currentIndex.value])
+const questionTitle = computed(() => currentIndex.value === 0
+  ? 'Let’s get started by finding you a pro near you'
+  : currentQuestion.value?.id === 'email'
+    ? 'How can we reach you?'
+  : currentQuestion.value?.label ?? '')
+const currentAnswer = computed(() => {
+  const key = answerKey.value as keyof typeof answers.value | undefined
+  return key ? answers.value[key] : ''
+})
+
+const categoryOptions = computed(() => siteFlowConfig.categories.map((category) => category.name))
+const currentOptions = computed(() => {
+  if (currentQuestion.value?.id === 'categories') return categoryOptions.value
+  if (currentQuestion.value?.id === 'subcategories') {
+    const category = siteFlowConfig.categories.find((item) => item.name === answers.value.category)
+    return category?.subcategories ?? []
+  }
+  return currentQuestion.value?.options ?? []
+})
+
+const answered = (index: number) => {
+  const question = questions[index]
+  if (!question) return true
+  if (question.id === 'email') {
+    return answers.value.email.trim().length > 0 && answers.value.phone.trim().length > 0
+  }
+  const key = answerKeyForQuestion(question.id)
+  return String(answers.value[key as keyof typeof answers.value] ?? '').trim().length > 0
+}
+
+const nextUnansweredIndex = (start: number) => {
+  for (let index = start; index < questions.length; index += 1) {
+    if (answered(index) === false) return index
+  }
+  return questions.length
+}
+
+const syncQuestion = async () => {
+  const nextIndex = nextUnansweredIndex(currentIndex.value)
+  if (nextIndex >= questions.length) {
+    await finish()
+    return
+  }
+
+  currentIndex.value = nextIndex
+  draftValue.value = String(currentAnswer.value ?? '')
+  draftEmail.value = answers.value.email
+  draftPhone.value = answers.value.phone
+  await nextTick()
+  inputElement.value?.focus()
+}
+
+const choose = (value: string) => {
+  draftValue.value = value
+  submit()
+}
+
+const submit = async () => {
+  if (currentQuestion.value?.id === 'email') {
+    if (draftEmail.value.trim().length === 0 || draftPhone.value.trim().length === 0) return
+    answers.value.email = draftEmail.value.trim()
+    answers.value.phone = draftPhone.value.trim()
+    currentIndex.value += 1
+    await syncQuestion()
+    return
+  }
+
+  const value = draftValue.value.trim()
+  if (!value || !answerKey.value) return
+
+  const key = answerKey.value as keyof typeof answers.value
+  answers.value[key] = value
+  if (key === 'category') {
+    const category = siteFlowConfig.categories.find((item) => item.name === value)
+    answers.value.categoryId = category?.id ?? ''
+    answers.value.subcategory = ''
+  }
+
+  currentIndex.value += 1
+  await syncQuestion()
+}
+
+const finish = async () => {
+  emit('close')
+  await router.push(pathForPageName('thank_you', answers.value))
+}
+
+const close = () => emit('close')
+
+watch(() => props.open, (isOpen) => {
+  if (isOpen) {
+    currentIndex.value = nextUnansweredIndex(0)
+    draftValue.value = ''
+    draftEmail.value = answers.value.email
+    draftPhone.value = answers.value.phone
+    syncQuestion()
+  }
+})
+
+watch(currentAnswer, (value) => {
+  if (props.open) draftValue.value = String(value ?? '')
+})
+</script>
+
+<template>
+  <div v-if="open" class="fixed inset-0 z-50 flex items-start justify-center bg-black/55 px-4 py-8 sm:py-10" role="dialog" aria-modal="true" :aria-labelledby="'question-modal-title'">
+    <div class="relative flex min-h-[450px] w-full max-w-[488px] flex-col bg-white px-7 py-7 shadow-2xl sm:min-h-[450px] sm:px-8 sm:py-8">
+      <button class="absolute right-5 top-4 text-2xl leading-none text-black/45 transition hover:text-black" type="button" aria-label="Close" @click="close">&times;</button>
+
+      <div class="flex items-center gap-3 pr-8">
+        <span class="text-xs font-bold text-[#2361a8]">{{ Math.round(((currentIndex + 1) / totalSteps) * 100) }}%</span>
+        <div class="h-[5px] flex-1 overflow-hidden bg-[#e8e9e5]">
+          <div class="h-full bg-[var(--cc-yellow)] transition-all duration-300" :style="{ width: `${((currentIndex + 1) / totalSteps) * 100}%` }" />
+        </div>
+      </div>
+
+      <div v-if="currentQuestion" class="flex flex-1 flex-col pt-7">
+        <h2 id="question-modal-title" class="max-w-[420px] text-2xl font-bold leading-[1.12] sm:text-[25px]">{{ questionTitle }}</h2>
+
+        <form class="mt-7 flex flex-1 flex-col" @submit.prevent="submit">
+          <div v-if="currentQuestion.id === 'email'" class="grid gap-3">
+            <input
+              v-model="draftEmail"
+              class="w-full border border-[#d6d7d3] px-3 py-3 text-sm outline-none placeholder:text-[#777b76] focus:border-[#2361a8]"
+              type="email"
+              placeholder="Email address"
+              autocomplete="email"
+              required
+            >
+            <input
+              v-model="draftPhone"
+              class="w-full border border-[#d6d7d3] px-3 py-3 text-sm outline-none placeholder:text-[#777b76] focus:border-[#2361a8]"
+              type="tel"
+              placeholder="Phone number"
+              autocomplete="tel"
+              required
+            >
+          </div>
+          <select v-else-if="currentOptions.length" v-model="draftValue" class="w-full border border-[#d6d7d3] bg-white px-3 py-3 text-sm outline-none focus:border-[#2361a8]" required>
+            <option disabled value="">Select an option</option>
+            <option v-for="option in currentOptions" :key="option" :value="option">{{ option }}</option>
+          </select>
+          <input
+            v-else
+            ref="inputElement"
+            v-model="draftValue"
+            class="w-full border border-[#d6d7d3] px-3 py-3 text-sm outline-none placeholder:text-[#777b76] focus:border-[#2361a8]"
+            :type="currentQuestion.id === 'phone' ? 'tel' : 'text'"
+            :placeholder="currentQuestion.label"
+            required
+          >
+
+          <div class="mt-auto flex justify-end pt-8">
+            <button class="bg-[var(--cc-yellow)] px-5 py-3 text-xs font-bold text-[var(--cc-charcoal)] transition hover:bg-[#f7c900] disabled:cursor-not-allowed disabled:opacity-50" type="submit" :disabled="currentQuestion.id === 'email' ? draftEmail.trim().length === 0 || draftPhone.trim().length === 0 : draftValue.trim().length === 0">
+              Continue <span class="ml-3 text-base leading-none">&rarr;</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</template>
