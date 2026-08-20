@@ -10,7 +10,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   alias: {
     '@': resolve(process.cwd(), 'app'),
-    '@global': resolve(process.cwd())
+    '@': resolve(process.cwd())
   },
   css: ['~/assets/css/main.css'],
   vite: {
