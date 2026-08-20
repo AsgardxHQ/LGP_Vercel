@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { promisify } from 'node:util';
 import { saveProjectProcess, stopProjectProcess } from '../../utils/project-process';
 import { getProjectPath } from '../../utils/project-paths';
+import { assertProcessManagementSupported } from '../../utils/environment';
 
 const execFileAsync = promisify(execFile);
 
@@ -19,6 +20,8 @@ const findAvailablePort = () => new Promise<number>((resolve, reject) => {
 });
 
 export default defineEventHandler(async (event) => {
+  assertProcessManagementSupported();
+
   const body = await readBody(event);
   const { name } = body;
 

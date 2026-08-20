@@ -1,6 +1,5 @@
-import { readFile } from 'node:fs/promises';
-import { getBaseConfigPath } from '../../utils/project-paths';
+import { readBaseConfig } from '../../utils/project-assets';
 
 export default defineEventHandler(async () => {
-  return JSON.parse(await readFile(getBaseConfigPath(), 'utf8'));
+  return readBaseConfig();
 });

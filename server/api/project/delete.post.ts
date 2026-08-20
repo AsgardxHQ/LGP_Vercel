@@ -1,7 +1,10 @@
 import { removeProjectDirectory, stopProjectProcess } from '../../utils/project-process'
 import { getProjectPath } from '../../utils/project-paths'
+import { assertProcessManagementSupported } from '../../utils/environment'
 
 export default defineEventHandler(async (event) => {
+  assertProcessManagementSupported()
+
   const body = await readBody<{ name?: unknown }>(event)
   const projectName = typeof body?.name === 'string' ? body.name.trim() : ''
 

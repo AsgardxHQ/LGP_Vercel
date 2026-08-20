@@ -1,16 +1,14 @@
-import fs from 'node:fs/promises'
 import { getRunningProjectLink } from '../../utils/project-process'
-import { getProjectPath, getProjectsRoot } from '../../utils/project-paths'
+import { getProjectPath } from '../../utils/project-paths'
+import { listProjectNames } from '../../utils/project-assets'
+import { isProcessManagementSupported } from '../../utils/environment'
 
-export default defineEventHandler(async (event) => {
-  const folderPath = getProjectsRoot()
-  const entries = await fs.readdir(folderPath, {withFileTypes: true})
-  const folders = entries
-    .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
+export default defineEventHandler(async () => {
+  const names = await listProjectNames()
 
-  return Promise.all(folders.map(async (name) => ({
+  return Promise.all(names.map(async (name) => ({
     name,
-    link: await getRunningProjectLink(getProjectPath(name))
+    // Running dev-server links only exist on a self-hosted/local process host.
+    link: isProcessManagementSupported() ? await getRunningProjectLink(getProjectPath(name)) : null
   })))
 });

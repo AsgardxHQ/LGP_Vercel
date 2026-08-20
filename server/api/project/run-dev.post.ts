@@ -3,6 +3,7 @@ import { connect, createServer } from 'node:net';
 import { join } from 'node:path';
 import { saveProjectProcess, stopProjectProcess } from '../../utils/project-process';
 import { getProjectPath } from '../../utils/project-paths';
+import { assertProcessManagementSupported } from '../../utils/environment';
 
 const findAvailablePort = () => new Promise<number>((resolve, reject) => {
   const server = createServer();
@@ -15,6 +16,8 @@ const findAvailablePort = () => new Promise<number>((resolve, reject) => {
 });
 
 export default defineEventHandler(async (event) => {
+  assertProcessManagementSupported();
+
   const body = await readBody(event);
   const { name } = body;
 

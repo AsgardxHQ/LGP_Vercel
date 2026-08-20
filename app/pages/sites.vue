@@ -1,10 +1,14 @@
 <template>
   <div>
     <h1 class="mb-6 text-2xl font-semibold">Sites</h1>
+    <p v-if="!canManageProcesses" class="mt-2 rounded-lg bg-amber-50 px-4 py-2 text-sm text-amber-800">
+      Creating, building, running and deleting projects requires a self-hosted/local environment and is disabled on this deployment.
+    </p>
     <div class="mt-6 flex gap-3">
       <button
         type="button"
-        class="flex items-center gap-2 rounded-full bg-black px-4 py-2 text-white cursor-pointer"
+        class="flex items-center gap-2 rounded-full bg-black px-4 py-2 text-white cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+        :disabled="!canManageProcesses"
         @click="isModalOpen = true"
       >
         Create Project
@@ -40,14 +44,16 @@
             <td class="px-4 py-4">
               <button
                 type="button"
-                class="px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700 cursor-pointer"
+                class="px-3 py-1 text-sm rounded bg-blue-600 text-white hover:bg-blue-700 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                :disabled="!canManageProcesses"
                 @click="runDev(project.name)"
               >
                 run
               </button>
               <button
                 type="button"
-                class="ml-2 px-3 py-1 text-sm rounded bg-green-600 text-white hover:bg-green-700 cursor-pointer"
+                class="ml-2 px-3 py-1 text-sm rounded bg-green-600 text-white hover:bg-green-700 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                :disabled="!canManageProcesses"
                 @click="buildProject(project.name)"
               >
                 build
@@ -56,18 +62,20 @@
             <td class="px-4 py-4 text-right">
               <button
                 type="button"
-                class="mr-3 cursor-pointer rounded-sm border-1 px-2 py-1 text-lg text-gray-600 hover:bg-black hover:text-white"
+                class="mr-3 cursor-pointer rounded-sm border-1 px-2 py-1 text-lg text-gray-600 hover:bg-black hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
                 :aria-label="`Edit ${project.name}`"
                 :title="`Edit ${project.name}`"
+                :disabled="!canManageProcesses"
                 @click="editProject(project.name)"
               >
                 &#9998;
               </button>
               <button
                 type="button"
-                class="cursor-pointer rounded-sm border-1 px-2 py-1 text-lg text-red-600 hover:bg-red-600 hover:text-white"
+                class="cursor-pointer rounded-sm border-1 px-2 py-1 text-lg text-red-600 hover:bg-red-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
                 :aria-label="`Delete ${project.name}`"
                 :title="`Delete ${project.name}`"
+                :disabled="!canManageProcesses"
                 @click="deleteProject(project.name)"
               >
                 &#128465;
@@ -88,8 +96,10 @@
 type Project = { name: string; link: string | null };
 
 const { data } = await useFetch<Project[]>('/api/project/get-all')
+const { data: capabilities } = await useFetch<{ processManagement: boolean }>('/api/project/capabilities')
 
 const allProjects = ref<Project[]>(data.value ?? []);
+const canManageProcesses = computed(() => capabilities.value?.processManagement ?? false);
 const isModalOpen = ref(false);
 const editProject = async (project: string) => {
   const newName = window.prompt('Project name', project)?.trim();

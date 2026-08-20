@@ -1,11 +1,14 @@
 import { rename } from 'node:fs/promises'
 import { stopProjectProcess } from '../../utils/project-process'
 import { getProjectPath } from '../../utils/project-paths'
+import { assertProcessManagementSupported } from '../../utils/environment'
 
 const isValidProjectName = (name: unknown): name is string =>
   typeof name === 'string' && Boolean(name.trim()) && name !== '.' && name !== '..' && name === name.replace(/[\\/]/g, '')
 
 export default defineEventHandler(async (event) => {
+  assertProcessManagementSupported()
+
   const body = await readBody<{ oldName?: unknown; newName?: unknown }>(event)
   const oldName = typeof body?.oldName === 'string' ? body.oldName.trim() : ''
   const newName = typeof body?.newName === 'string' ? body.newName.trim() : ''

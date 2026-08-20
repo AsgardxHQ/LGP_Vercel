@@ -4,6 +4,7 @@ import { connect, createServer } from 'node:net';
 import { join, resolve } from 'node:path';
 import { removeProjectDirectory, saveProjectProcess, stopProjectProcess } from '../../utils/project-process';
 import { getAppTemplatePath, getBaseConfigPath, getProjectPath, getProjectsRoot } from '../../utils/project-paths';
+import { assertProcessManagementSupported } from '../../utils/environment';
 
 const runCommand = (command: string, args: string[], cwd: string) => new Promise<void>((resolve, reject) => {
   const child = spawn(command, args, { cwd, stdio: ['ignore', 'pipe', 'pipe'] });
@@ -154,6 +155,8 @@ export default defineNuxtConfig({
 };
 
 export default defineEventHandler(async (event) => {
+  assertProcessManagementSupported();
+
   const body = await readBody<{ name?: unknown; config?: unknown }>(event);
   const projectName = typeof body?.name === 'string' ? body.name.trim() : '';
   const configOverrides = body?.config && typeof body.config === 'object'
