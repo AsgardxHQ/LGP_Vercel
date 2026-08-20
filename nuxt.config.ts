@@ -12,6 +12,13 @@ export default defineNuxtConfig({
     '@': resolve(process.cwd(), 'app')  
   },
   css: ['~/assets/css/main.css'],
+  runtimeConfig: {
+    // Server-only: set NUXT_VERCEL_API_TOKEN (and NUXT_VERCEL_TEAM_ID if the
+    // projects live under a team) so the dashboard can resolve live deployment
+    // links via the Vercel API.
+    vercelApiToken: process.env.NUXT_VERCEL_API_TOKEN || '',
+    vercelTeamId: process.env.NUXT_VERCEL_TEAM_ID || ''
+  },
   vite: {
     plugins: [tailwindcss()]
   },

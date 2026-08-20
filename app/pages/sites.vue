@@ -4,6 +4,9 @@
     <p v-if="!canManageProcesses" class="mt-2 rounded-lg bg-amber-50 px-4 py-2 text-sm text-amber-800">
       Creating, building, running and deleting projects requires a self-hosted/local environment and is disabled on this deployment.
     </p>
+    <p v-if="!hasVercelIntegration" class="mt-2 rounded-lg bg-amber-50 px-4 py-2 text-sm text-amber-800">
+      Set NUXT_VERCEL_API_TOKEN (and NUXT_VERCEL_TEAM_ID, if applicable) so deployed project links can be resolved via the Vercel API.
+    </p>
     <div class="mt-6 flex gap-3">
       <button
         type="button"
@@ -39,7 +42,7 @@
               >
                 {{ project.link }}
               </a>
-              <span v-else class="text-gray-400">Not running</span>
+              <span v-else class="text-gray-400">{{ hasVercelIntegration ? 'Not deployed' : 'Not running' }}</span>
             </td>
             <td class="px-4 py-4">
               <button
@@ -96,10 +99,11 @@
 type Project = { name: string; link: string | null };
 
 const { data } = await useFetch<Project[]>('/api/project/get-all')
-const { data: capabilities } = await useFetch<{ processManagement: boolean }>('/api/project/capabilities')
+const { data: capabilities } = await useFetch<{ processManagement: boolean; vercelIntegration: boolean }>('/api/project/capabilities')
 
 const allProjects = ref<Project[]>(data.value ?? []);
 const canManageProcesses = computed(() => capabilities.value?.processManagement ?? false);
+const hasVercelIntegration = computed(() => capabilities.value?.vercelIntegration ?? false);
 const isModalOpen = ref(false);
 const editProject = async (project: string) => {
   const newName = window.prompt('Project name', project)?.trim();
