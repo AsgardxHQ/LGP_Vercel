@@ -3,14 +3,14 @@
     <div>{{ data.category }} / {{ data.subcategory }}</div>
   </div>
 </template>
-<script setup lang="ts">
+<script setup>
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
-const zipcode = route.query.zipcode as string || '';
+const zipcode = String(route.query.zipcode || '');
 const data = collectData();
 // direct/refreshed entry has no in-memory state, so fall back to the query
 if (!data.value.subcategory && route.query.subcategory) {
-  data.value.subcategory = route.query.subcategory as string;
+  data.value.subcategory = String(route.query.subcategory);
 }
 </script>

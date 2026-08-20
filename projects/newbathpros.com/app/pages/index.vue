@@ -17,7 +17,7 @@
     <BathroomQuotes />
   </div>
 </template>
-<script setup lang="ts">
+<script setup>
 const currentTaxonomy = getTaxonomy({ category: 'Bathroom Remodeling' })
 console.log(currentTaxonomy)
 </script>

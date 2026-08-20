@@ -2,7 +2,7 @@
   <div>category</div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 definePageMeta({
   validate: (route) => !route.path.includes('/form/')
 });

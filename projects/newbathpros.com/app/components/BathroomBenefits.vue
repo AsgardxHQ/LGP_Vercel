@@ -12,7 +12,7 @@
   </section>
 </template>
 
-<script setup lang="ts">
+<script setup>
 const benefits = [
   { title: 'Added value', description: 'According to Remodeler Magazine, homeowners can recoup at least 66% of bathroom remodel costs when the house is sold!' },
   { title: 'Styling', description: "A bathroom project is a great opportunity to spruce up your bathroom's styling and provide a newer and more updated appearance." },

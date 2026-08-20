@@ -17,17 +17,19 @@
   </section>
 </template>
 
-<script setup lang="ts">
-const { currentTaxonomy } = defineProps<{ currentTaxonomy: any }>();
+<script setup>
+const { currentTaxonomy } = defineProps({
+  currentTaxonomy: { type: Object, required: true }
+});
 const data = collectData({ category: "", subcategory: "" });
 data.value.category = currentTaxonomy.name;
 
-const selectService = (service: any) => {
+const selectService = (service) => {
   data.value.subcategory = service.name;
   navigateTo({ path: '/get-started' });
 };
 
-const services:any = [
+const services = [
   { icon: '▥', color: 'bg-[#eadac7]', title: 'Shower Install or Upgrade', tagline: 'Sleek, Stylish, Comfortable, and Efficient', description: "If you want to boost your home's value on the market, there are few better ways of doing that than revamping your whole bathroom." },
   { icon: '▤', color: 'bg-[#c9f0fa]', title: 'Bathtub to Shower Conversion', tagline: 'Save Space, Money, Have Peace of Mind', description: 'Sometimes, the best thing to do with an outdated tub is to convert it into something better. A bathtub to shower conversion allows you to easily modernize your bathing experience.' },
   { icon: '⌁', color: 'bg-[#d6e3e9]', title: 'Walk-In Tub Installation or Conversion', tagline: 'The Bathtub Made Safer and Simpler', description: 'Walk-in tubs present an innovative solution that makes getting into the tub as safe as it is easy.' }

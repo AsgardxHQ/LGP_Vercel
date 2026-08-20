@@ -16,13 +16,13 @@
   </section>
 </template>
 
-<script setup lang="ts">
-defineProps<{
-  title: string;
-  description: string;
-  costRange: string;
-  image: string;
-  imageAlt: string;
-  imageOnRight?: boolean;
-}>();
+<script setup>
+defineProps({
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  costRange: { type: String, required: true },
+  image: { type: String, required: true },
+  imageAlt: { type: String, required: true },
+  imageOnRight: { type: Boolean, default: false }
+});
 </script>
