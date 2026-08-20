@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { baseConfig } from '@/utils/page-flow';
 import { findCategoryBySlug, findSubcategoryBySlug } from '@/utils/taxonomy-routes';
 

@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 const answers = useFlowAnswers();
 const { goNext, goPrevious } = usePageFlow('address');
 </script>

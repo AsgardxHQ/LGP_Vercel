@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { baseConfig } from '@/utils/page-flow';
 import { categoryPath } from '@/utils/taxonomy-routes';
 
@@ -6,7 +6,7 @@ const answers = useFlowAnswers();
 const { goPrevious } = usePageFlow('categories');
 const router = useRouter();
 
-const selectCategory = (name: string) => {
+const selectCategory = (name) => {
   answers.value.category = name;
   answers.value.subcategory = '';
   router.push(categoryPath(name));

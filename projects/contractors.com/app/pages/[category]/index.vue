@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { computed, watchEffect } from 'vue';
 import { baseConfig } from '@/utils/page-flow';
 import { findCategoryBySlug, subcategoryPath } from '@/utils/taxonomy-routes';
@@ -17,7 +17,7 @@ watchEffect(() => {
   if (category.value) answers.value.category = category.value.name;
 });
 
-const selectSubcategory = (name: string) => {
+const selectSubcategory = (name) => {
   if (!category.value) return;
   answers.value.subcategory = name;
   router.push(subcategoryPath(category.value.name, name));

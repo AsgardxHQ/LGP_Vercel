@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { computed } from 'vue';
 import { baseConfig } from '@/utils/page-flow';
 
@@ -7,7 +7,7 @@ const { goNext, goPrevious } = usePageFlow('subcategories');
 
 const category = computed(() => baseConfig.taxonomy.categories.find((item) => item.name === answers.value.category));
 
-const selectSubcategory = (name: string) => {
+const selectSubcategory = (name) => {
   answers.value.subcategory = name;
   goNext();
 };

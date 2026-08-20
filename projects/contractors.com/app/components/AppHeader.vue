@@ -1,7 +1,9 @@
-<script setup lang="ts">
-defineProps<{ userName?: string }>()
+<script setup>
+defineProps({
+  userName: { type: String, default: undefined }
+})
 
-const emit = defineEmits<{ signOut: [] }>()
+const emit = defineEmits(['signOut'])
 </script>
 
 <template>
