@@ -2,11 +2,18 @@
   "name": "lgp_admin",
   "type": "module",
   "private": true,
+  "packageManager": "npm@11.6.2",
+  "workspaces": [
+    "projects/*"
+  ],
   "scripts": {
     "build": "nuxt build",
+    "build:sites": "turbo run build --filter=./projects/*",
     "postbuild": "node scripts/copy-runtime-data.mjs",
     "dev": "nuxt dev",
+    "dev:sites": "turbo run dev --filter=./projects/*",
     "generate": "nuxt generate",
+    "generate:sites": "turbo run generate --filter=./projects/*",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
@@ -18,6 +25,7 @@
     "vue-router": "^5.2.0"
   },
   "devDependencies": {
-    "@types/node": "^26.2.0"
+    "@types/node": "^26.2.0",
+    "turbo": "^2.5.6"
   }
 }

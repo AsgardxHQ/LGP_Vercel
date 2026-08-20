@@ -2,6 +2,25 @@
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
 
+## Turborepo
+
+The root workspace contains the dashboard and the site projects under `projects/*`.
+Use these commands from the repository root:
+
+```bash
+# Build every site with Turborepo
+npm run build:sites
+
+# Run all site development servers
+npm run dev:sites
+
+# Generate every site
+npm run generate:sites
+```
+
+Individual sites can still be run from their own directory with `npm run dev` or
+`npm run build`.
+
 ## Setup
 
 Make sure to install dependencies:
