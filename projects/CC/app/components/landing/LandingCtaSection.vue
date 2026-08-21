@@ -1,13 +1,23 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import { siteTaxonomy } from '../../utils/page-flow';
 import { useFlowAnswers } from '../../utils/usePageFlow';
 import { useCategorySelection } from '../../composables/useCategorySelection';
+import { isValidZipcode } from '../../utils/form-validation';
 
 const answers = useFlowAnswers();
 const { selectCategory } = useCategorySelection();
+const zipcodeError = ref('');
 
 const submit = async () => {
   if (answers.value.category.trim().length === 0) return;
+  const zipcode = answers.value.zipcode.trim();
+  if (!isValidZipcode(zipcode)) {
+    zipcodeError.value = 'Enter a 5-digit ZIP code.';
+    return;
+  }
+  answers.value.zipcode = zipcode;
+  zipcodeError.value = '';
   await selectCategory(answers.value.category);
 };
 </script>
@@ -43,8 +53,14 @@ const submit = async () => {
             v-model="answers.zipcode"
             class="rounded-lg border border-black/15 px-3 py-2 text-sm outline-none transition focus:border-[var(--cc-brand-blue)]"
             type="text"
+            inputmode="numeric"
+            autocomplete="postal-code"
+            pattern="[0-9]{5}"
+            maxlength="5"
             placeholder="ZIP code"
+            required
           />
+          <p v-if="zipcodeError" class="text-sm text-red-600" role="alert">{{ zipcodeError }}</p>
           <button type="submit" class="mt-1 block rounded-lg bg-[var(--cc-yellow)] px-4 py-2.5 text-center text-sm font-semibold text-[var(--cc-charcoal)] transition hover:bg-[#ffca0d]">Get quotes</button>
         </form>
         <p class="mt-3 text-xs text-black/50">By submitting, you agree to our terms and privacy policy.</p>

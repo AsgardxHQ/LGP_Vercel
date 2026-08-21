@@ -1,9 +1,19 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+import { isNonEmpty } from '../../../utils/form-validation';
+
 const answers = useFlowAnswers();
 const { goNext, goPrevious } = usePageFlow('address');
+const error = ref('');
 
 const submit = () => {
-  if (answers.value.address.trim().length === 0) return;
+  const address = answers.value.address.trim();
+  if (!isNonEmpty(address)) {
+    error.value = 'Enter a project address.';
+    return;
+  }
+  answers.value.address = address;
+  error.value = '';
   goNext();
 };
 </script>
@@ -19,8 +29,10 @@ const submit = () => {
           v-model="answers.address"
           class="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
           type="text"
+          autocomplete="street-address"
           required
         >
+        <p v-if="error" class="mt-2 text-sm text-red-600" role="alert">{{ error }}</p>
       </label>
       <div class="flex gap-4">
         <button class="flex-1 rounded-xl border border-gray-300 px-5 py-3 font-medium text-gray-700 transition hover:border-gray-400" type="button" @click="goPrevious">

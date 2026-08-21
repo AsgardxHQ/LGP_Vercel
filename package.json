@@ -17,6 +17,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "sync:hi-taxonomy": "node scripts/hi-taxonomy.mjs",
+    "sync:form-validation": "node scripts/form-validation.mjs",
     "sync:taxonomy-routes": "node scripts/taxonomy-routes.mjs"
   },
   "dependencies": {

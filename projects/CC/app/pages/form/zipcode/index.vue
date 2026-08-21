@@ -1,9 +1,19 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+import { isValidZipcode } from '../../../utils/form-validation';
+
 const answers = useFlowAnswers();
 const { goNext } = usePageFlow('zipcode');
+const error = ref('');
 
 const submit = () => {
-  if (answers.value.zipcode.trim().length === 0) return;
+  const zipcode = answers.value.zipcode.trim();
+  if (!isValidZipcode(zipcode)) {
+    error.value = 'Enter a 5-digit ZIP code.';
+    return;
+  }
+  answers.value.zipcode = zipcode;
+  error.value = '';
   goNext();
 };
 </script>
@@ -20,8 +30,13 @@ const submit = () => {
           v-model="answers.zipcode"
           class="w-full rounded-xl border border-gray-300 px-4 py-3 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
           type="text"
+          inputmode="numeric"
+          autocomplete="postal-code"
+          pattern="[0-9]{5}"
+          maxlength="5"
           required
         >
+        <p v-if="error" class="mt-2 text-sm text-red-600" role="alert">{{ error }}</p>
       </label>
       <button class="w-full rounded-xl bg-blue-700 px-5 py-3 font-medium text-white transition hover:bg-blue-800" type="submit">
         Continue
