@@ -40,7 +40,7 @@ function handleImageError(title: string) {
 </script>
 
 <template>
-  <section class="cc-section bg-[linear-gradient(180deg,#fff7d4_0%,#ffe764_100%)] py-16 md:py-20">
+  <section id="projects" class="cc-section bg-[linear-gradient(180deg,#fff7d4_0%,#ffe764_100%)] py-16 md:py-20">
     <div class="cc-container">
       <p class="mb-3 text-center text-xs font-semibold uppercase tracking-[0.25em] text-[var(--cc-muted)]">Featured projects</p>
       <h2 class="text-center text-3xl font-bold md:text-4xl">Explore by project</h2>

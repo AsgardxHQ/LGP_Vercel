@@ -21,17 +21,17 @@ const cards = [
 <template>
   <section class="cc-section py-16 md:py-20">
     <div class="cc-container">
-      <p class="section-reveal mb-3 text-center text-xs font-semibold uppercase tracking-[0.26em] text-[var(--cc-muted)]">How we help</p>
+      <p class="section-reveal mb-3 text-center text-xs font-semibold uppercase tracking-[0.26em] text-[#ef6c3b]">Why choose us</p>
       <h2 class="section-reveal text-center text-3xl font-bold md:text-4xl">Where homeowner confidence comes first</h2>
-      <div class="mt-10 grid gap-6 md:grid-cols-3">
-        <article v-for="(card, index) in cards" :key="card.title" class="section-reveal overflow-hidden border border-black/10 bg-white shadow-sm" :style="{ animationDelay: `${index * 120}ms` }">
-          <img :src="card.image" :alt="card.title" class="h-40 w-full object-cover" />
-          <div class="p-5">
-            <h3 class="text-lg font-semibold">{{ card.title }}</h3>
-            <p class="mt-2 text-sm leading-relaxed text-[var(--cc-ink-soft)]">{{ card.body }}</p>
-            <a href="#" class="mt-4 inline-block text-sm font-semibold text-[var(--cc-brand-blue)]">Start your project</a>
-          </div>
+      <div class="mt-10 grid gap-8 md:grid-cols-3">
+        <article v-for="(card, index) in cards" :key="card.title" class="section-reveal" :style="{ animationDelay: `${index * 120}ms` }">
+          <h3 class="text-base font-semibold">{{ card.title }}</h3>
+          <p class="mt-3 text-sm leading-relaxed text-[var(--cc-ink-soft)]">{{ card.body }}</p>
+          <a href="#get-started" class="mt-4 inline-flex items-center text-sm font-semibold text-[var(--cc-brand-blue)]">Start your project <span class="ml-2">&rarr;</span></a>
         </article>
+      </div>
+      <div class="mt-7 grid gap-4 md:grid-cols-3">
+        <img v-for="card in cards" :key="`${card.title}-image`" :src="card.image" :alt="card.title" class="h-40 w-full object-cover" />
       </div>
     </div>
   </section>

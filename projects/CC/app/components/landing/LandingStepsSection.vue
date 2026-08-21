@@ -19,7 +19,7 @@ const steps = [
 </script>
 
 <template>
-  <section class="cc-section py-16 md:py-20">
+  <section id="how-it-works" class="cc-section py-16 md:py-20">
     <div class="cc-container">
       <p class="mb-3 text-center text-xs font-semibold uppercase tracking-[0.24em] text-[var(--cc-muted)]">How it works</p>
       <h2 class="text-center text-3xl font-bold md:text-4xl">Simple steps to hire the right contractor</h2>
@@ -31,7 +31,7 @@ const steps = [
         </article>
       </div>
       <div class="mt-8 text-center">
-        <button class="rounded-full bg-[var(--cc-yellow)] px-6 py-3 text-sm font-semibold text-[var(--cc-charcoal)] transition hover:bg-[#ffcc0f]">Get a quote today</button>
+        <a href="#get-started" class="inline-block rounded-full bg-[var(--cc-yellow)] px-6 py-3 text-sm font-semibold text-[var(--cc-charcoal)] transition hover:bg-[#ffcc0f]">Get a quote today</a>
       </div>
     </div>
   </section>

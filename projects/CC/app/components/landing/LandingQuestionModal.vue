@@ -93,6 +93,16 @@ const choose = (value: string) => {
   submit()
 }
 
+const goBack = async () => {
+  if (currentIndex.value <= 0) return
+  currentIndex.value -= 1
+  draftValue.value = String(currentAnswer.value ?? '')
+  draftEmail.value = answers.value.email
+  draftPhone.value = answers.value.phone
+  await nextTick()
+  inputElement.value?.focus()
+}
+
 const submit = async () => {
   if (currentQuestion.value?.id === 'email') {
     if (draftEmail.value.trim().length === 0 || draftPhone.value.trim().length === 0) return
@@ -141,8 +151,8 @@ watch(currentAnswer, (value) => {
 </script>
 
 <template>
-  <div v-if="open" class="fixed inset-0 z-50 flex items-start justify-center bg-black/55 px-4 py-8 sm:py-10" role="dialog" aria-modal="true" :aria-labelledby="'question-modal-title'">
-    <div class="relative flex min-h-[450px] w-full max-w-[488px] flex-col bg-white px-7 py-7 shadow-2xl sm:min-h-[450px] sm:px-8 sm:py-8">
+  <div v-if="open" class="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/55 px-4 py-[50px]" role="dialog" aria-modal="true" :aria-labelledby="'question-modal-title'">
+    <div class="relative flex min-h-[600px] w-full max-w-[650px] flex-col bg-white px-6 py-7 shadow-2xl sm:px-10 sm:py-10">
       <button class="absolute right-5 top-4 text-2xl leading-none text-black/45 transition hover:text-black" type="button" aria-label="Close" @click="close">&times;</button>
 
       <div class="flex items-center gap-3 pr-8">
@@ -152,14 +162,14 @@ watch(currentAnswer, (value) => {
         </div>
       </div>
 
-      <div v-if="currentQuestion" class="flex flex-1 flex-col pt-7">
-        <h2 id="question-modal-title" class="max-w-[420px] text-2xl font-bold leading-[1.12] sm:text-[25px]">{{ questionTitle }}</h2>
+      <div v-if="currentQuestion" class="flex flex-1 flex-col pt-8">
+        <h2 id="question-modal-title" class="max-w-[560px] text-2xl font-bold leading-[1.12] sm:text-[25px]">{{ questionTitle }}</h2>
 
-        <form class="mt-7 flex flex-1 flex-col" @submit.prevent="submit">
+        <form class="mt-10 flex flex-1 flex-col" @submit.prevent="submit">
           <div v-if="currentQuestion.id === 'email'" class="grid gap-3">
             <input
               v-model="draftEmail"
-              class="w-full border border-[#d6d7d3] px-3 py-3 text-sm outline-none placeholder:text-[#777b76] focus:border-[#2361a8]"
+              class="w-full border border-[#d6d7d3] rounded px-3 py-4 text-sm outline-none placeholder:text-[#777b76] focus:border-[#2361a8]"
               type="email"
               placeholder="Email address"
               autocomplete="email"
@@ -167,29 +177,42 @@ watch(currentAnswer, (value) => {
             >
             <input
               v-model="draftPhone"
-              class="w-full border border-[#d6d7d3] px-3 py-3 text-sm outline-none placeholder:text-[#777b76] focus:border-[#2361a8]"
+              class="w-full border border-[#d6d7d3] rounded px-3 py-4 text-sm outline-none placeholder:text-[#777b76] focus:border-[#2361a8]"
               type="tel"
               placeholder="Phone number"
               autocomplete="tel"
               required
             >
           </div>
-          <select v-else-if="currentOptions.length" v-model="draftValue" class="w-full border border-[#d6d7d3] bg-white px-3 py-3 text-sm outline-none focus:border-[#2361a8]" required>
-            <option disabled value="">Select an option</option>
-            <option v-for="option in currentOptions" :key="option" :value="option">{{ option }}</option>
-          </select>
+          <div v-else-if="currentOptions.length" class="grid max-h-[360px] gap-3 overflow-y-auto pr-1" role="radiogroup">
+            <label
+              v-for="option in currentOptions"
+              :key="option"
+              class="flex cursor-pointer items-center gap-3 rounded border px-4 py-4 text-sm transition"
+              :class="draftValue === option ? 'border-[#2361a8] bg-[#eaf2fb]' : 'border-[#d6d7d3] hover:border-[#2361a8]'"
+            >
+              <input v-model="draftValue" type="radio" class="peer sr-only" :value="option" name="question-option" required>
+              <span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-[#a9adA5] peer-checked:border-[#2361a8]">
+                <span v-if="draftValue === option" class="h-2 w-2 rounded-full bg-[#2361a8]" />
+              </span>
+              {{ option }}
+            </label>
+          </div>
           <input
             v-else
             ref="inputElement"
             v-model="draftValue"
-            class="w-full border border-[#d6d7d3] px-3 py-3 text-sm outline-none placeholder:text-[#777b76] focus:border-[#2361a8]"
+            class="w-full border border-[#d6d7d3] rounded px-3 py-4 text-sm outline-none placeholder:text-[#777b76] focus:border-[#2361a8]"
             :type="currentQuestion.id === 'phone' ? 'tel' : 'text'"
             :placeholder="currentQuestion.label"
             required
           >
 
-          <div class="mt-auto flex justify-end pt-8">
-            <button class="bg-[var(--cc-yellow)] px-5 py-3 text-xs font-bold text-[var(--cc-charcoal)] transition hover:bg-[#f7c900] disabled:cursor-not-allowed disabled:opacity-50" type="submit" :disabled="currentQuestion.id === 'email' ? draftEmail.trim().length === 0 || draftPhone.trim().length === 0 : draftValue.trim().length === 0">
+          <div class="mt-auto flex items-center justify-end gap-3 pt-8">
+            <button v-if="currentIndex > 0" class="px-5 py-4 text-center text-xs border rounded font-bold text-[var(--cc-charcoal)] transition cursor-pointer" type="button" @click="goBack">
+              <span class="text-base leading-none">&larr;</span>
+            </button>
+            <button class="bg-[var(--cc-yellow)] px-5 py-4 rounded text-xs font-bold text-[var(--cc-charcoal)] transition cursor-pointer hover:bg-[#f7c900] disabled:cursor-not-allowed disabled:opacity-50" type="submit" :disabled="currentQuestion.id === 'email' ? draftEmail.trim().length === 0 || draftPhone.trim().length === 0 : draftValue.trim().length === 0">
               Continue <span class="ml-3 text-base leading-none">&rarr;</span>
             </button>
           </div>

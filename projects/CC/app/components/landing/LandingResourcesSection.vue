@@ -24,7 +24,7 @@ const resources = [
 </script>
 
 <template>
-  <section class="cc-section py-16 md:py-20">
+  <section id="resources" class="cc-section py-16 md:py-20">
     <div class="cc-container">
       <h2 class="text-center text-3xl font-bold md:text-4xl">Expert guidance for your project</h2>
       <div class="mt-10 grid gap-4 md:grid-cols-4">
@@ -32,7 +32,7 @@ const resources = [
           <div class="mb-4 h-2 w-16 bg-[var(--cc-yellow)]" />
           <h3 class="text-base font-semibold leading-snug">{{ resource.title }}</h3>
           <p class="mt-2 text-sm leading-relaxed text-[var(--cc-ink-soft)]">{{ resource.body }}</p>
-          <a href="#" class="mt-5 inline-flex items-center text-sm font-semibold text-[var(--cc-brand-blue)]">{{ resource.cta }} <span class="ml-2">&rarr;</span></a>
+          <a href="#get-started" class="mt-5 inline-flex items-center text-sm font-semibold text-[var(--cc-brand-blue)]">{{ resource.cta }} <span class="ml-2">&rarr;</span></a>
         </article>
       </div>
     </div>

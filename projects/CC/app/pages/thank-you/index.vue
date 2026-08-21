@@ -31,8 +31,11 @@ const nextSteps = [
 
 <template>
   <div class="min-h-screen bg-white font-sans text-[#242424]">
-    <div class="h-7 bg-white px-[6%] pt-[23px] sm:px-[11%]" aria-hidden="true">
-      <div class="relative h-1 rounded-full bg-[#e8e8e4] before:absolute before:inset-y-0 before:left-0 before:w-[42%] before:rounded-full before:bg-[#f5c400] sm:before:w-[38%]" />
+    <div class="bg-white px-[6%] pt-[23px] sm:px-[11%]">
+      <p v-if="answers.category" class="mb-2 text-[9px] font-semibold uppercase tracking-[0.06em] text-[#5f5f5f]">{{ [answers.category, answers.subcategory].filter(Boolean).join(' ') }}</p>
+      <div class="relative h-1 rounded-full bg-[#e8e8e4]" aria-hidden="true">
+        <div class="absolute inset-y-0 left-0 w-full rounded-full bg-[var(--cc-yellow)]" />
+      </div>
     </div>
     <button class="absolute right-[5%] top-1 border-0 bg-transparent text-[26px] leading-none text-[#383838] sm:right-[10.5%]" type="button" aria-label="Close" @click="navigateTo('/')">×</button>
 

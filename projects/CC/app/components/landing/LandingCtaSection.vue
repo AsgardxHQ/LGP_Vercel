@@ -13,7 +13,7 @@ const submit = async () => {
 </script>
 
 <template>
-  <section class="cc-section bg-[var(--cc-charcoal)] py-16 text-white md:py-20">
+  <section id="get-started" class="cc-section bg-[var(--cc-charcoal)] py-16 text-white md:py-20">
     <div class="cc-container grid gap-8 md:grid-cols-[1.08fr_0.92fr] md:items-center">
       <div>
         <p class="mb-4 text-xs font-semibold uppercase tracking-[0.26em] text-[var(--cc-yellow)]">Get started today</p>
