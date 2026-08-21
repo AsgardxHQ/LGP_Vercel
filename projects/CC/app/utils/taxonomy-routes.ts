@@ -1,4 +1,8 @@
-import { siteFlowConfig, type SiteCategory } from './site-taxonomy';
+export type TaxonomyCategory = {
+  name: string;
+  id?: string;
+  subcategories: string[];
+};
 
 export const slugify = (value: string) => value
   .trim()
@@ -9,12 +13,12 @@ export const slugify = (value: string) => value
   .replace(/-+/g, '-')
   .replace(/^-+|-+$/g, '');
 
-export const findCategoryBySlug = <T extends SiteCategory>(categories: T[], key: string) => {
+export const findCategoryBySlug = <T extends TaxonomyCategory>(categories: T[], key: string) => {
   const slug = slugify(key);
   return categories.find((category) => slugify(category.name) === slug || category.id === key);
 };
 
-export const findSubcategoryBySlug = (category: SiteCategory | undefined, key: string) => {
+export const findSubcategoryBySlug = (category: TaxonomyCategory | undefined, key: string) => {
   const slug = slugify(key);
   return category?.subcategories.find((subcategory) => slugify(subcategory) === slug);
 };
@@ -29,9 +33,9 @@ const routeParam = (value: unknown) => {
   return typeof value === 'string' ? value : undefined;
 };
 
-export const resolveTaxonomyRoute = (
+export const resolveTaxonomyRoute = <T extends TaxonomyCategory>(
   params: Record<string, unknown>,
-  categories = siteFlowConfig.categories,
+  categories: T[] = [],
   query: Record<string, unknown> = {}
 ) => {
   const categoryKey = routeParam(params.category ?? params.category_slug ?? params.category_id ?? query.category);

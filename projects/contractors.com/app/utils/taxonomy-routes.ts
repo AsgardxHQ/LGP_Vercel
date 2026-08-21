@@ -4,7 +4,6 @@ export type TaxonomyCategory = {
   subcategories: string[];
 };
 
-/** Converts a taxonomy name into a URL-safe slug (spaces/underscores -> hyphens). Shared across all sites. */
 export const slugify = (value: string) => value
   .trim()
   .toLowerCase()
@@ -14,33 +13,42 @@ export const slugify = (value: string) => value
   .replace(/-+/g, '-')
   .replace(/^-+|-+$/g, '');
 
-/** Finds a category by slug, exact name or id. */
-export const findCategoryBySlug = <T extends TaxonomyCategory>(categories: T[], slug: string) =>
-  categories.find((category) => slugify(category.name) === slug || category.id === slug);
+export const findCategoryBySlug = <T extends TaxonomyCategory>(categories: T[], key: string) => {
+  const slug = slugify(key);
+  return categories.find((category) => slugify(category.name) === slug || category.id === key);
+};
 
-/** Finds a subcategory name by slug inside a category. */
-export const findSubcategoryBySlug = (category: TaxonomyCategory | undefined, slug: string) =>
-  category?.subcategories.find((subcategory) => slugify(subcategory) === slug);
+export const findSubcategoryBySlug = (category: TaxonomyCategory | undefined, key: string) => {
+  const slug = slugify(key);
+  return category?.subcategories.find((subcategory) => slugify(subcategory) === slug);
+};
 
 export const categoryPath = (categoryName: string) => `/${slugify(categoryName)}`;
 
 export const subcategoryPath = (categoryName: string, subcategoryName: string) =>
-  `/${slugify(categoryName)}/${slugify(subcategoryName)}`;
+  `${categoryPath(categoryName)}/${slugify(subcategoryName)}`;
 
-/** Resolves `[category]` / `[subcategory]` route params into taxonomy entries. */
+const routeParam = (value: unknown) => {
+  if (Array.isArray(value)) return typeof value[0] === 'string' ? value[0] : undefined;
+  return typeof value === 'string' ? value : undefined;
+};
+
 export const resolveTaxonomyRoute = <T extends TaxonomyCategory>(
   params: Record<string, unknown>,
-  categories: T[],
+  categories: T[] = [],
   query: Record<string, unknown> = {}
 ) => {
-  const routeParam = (value: unknown) => {
-    if (Array.isArray(value)) return typeof value[0] === 'string' ? value[0] : undefined;
-    return typeof value === 'string' ? value : undefined;
-  };
-  const categorySlug = routeParam(params.category ?? params.category_id ?? query.category);
-  const subcategorySlug = routeParam(params.subcategory ?? params.subcategory_id ?? query.subcategory);
-  const category = categorySlug ? findCategoryBySlug(categories, categorySlug) : undefined;
-  const subcategory = findSubcategoryBySlug(category, subcategorySlug ?? '');
+  const categoryKey = routeParam(params.category ?? params.category_slug ?? params.category_id ?? query.category);
+  const subcategoryKey = routeParam(
+    params.subcategory ?? params.subcategory_slug ?? params.subcategory_id ?? query.subcategory
+  );
+  const category = categoryKey ? findCategoryBySlug(categories, categoryKey) : undefined;
+  const subcategory = findSubcategoryBySlug(category, subcategoryKey ?? '');
 
-  return { category, subcategory };
+  return {
+    category,
+    subcategory,
+    categorySlug: category ? slugify(category.name) : undefined,
+    subcategorySlug: subcategory ? slugify(subcategory) : undefined
+  };
 };

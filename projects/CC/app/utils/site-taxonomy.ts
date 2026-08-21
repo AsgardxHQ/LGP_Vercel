@@ -1,4 +1,4 @@
-import hiTaxonomy from '../../../../HI_taxonomy.json';
+import hiTaxonomy from '../../HI_taxonomy.json';
 
 export type SiteCategory = {
   name: string;

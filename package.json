@@ -15,7 +15,9 @@
     "generate": "nuxt generate",
     "generate:sites": "turbo run generate --filter=./projects/*",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "sync:hi-taxonomy": "node scripts/hi-taxonomy.mjs",
+    "sync:taxonomy-routes": "node scripts/taxonomy-routes.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.3",

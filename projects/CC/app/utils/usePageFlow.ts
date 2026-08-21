@@ -1,5 +1,5 @@
 import { computed } from 'vue';
-import { flowPageIndex, flowPages, pathForPageName, type FlowPageName } from './page-flow';
+import { flowPageIndex, flowPages, pathForPageName, siteTaxonomy, type FlowPageName } from './page-flow';
 import { resolveTaxonomyRoute } from './taxonomy-routes';
 
 export type FlowAnswers = {
@@ -31,7 +31,7 @@ export const usePageFlow = (currentName: FlowPageName) => {
   const route = useRoute();
   const answers = useFlowAnswers();
 
-  const routeTaxonomy = resolveTaxonomyRoute(route.params, undefined, route.query);
+  const routeTaxonomy = resolveTaxonomyRoute(route.params, siteTaxonomy.categories, route.query);
   if (routeTaxonomy.category) {
     answers.value.category = routeTaxonomy.category.name;
     answers.value.categoryId = routeTaxonomy.category.id;
