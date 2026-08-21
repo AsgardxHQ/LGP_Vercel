@@ -4,6 +4,7 @@ import type { CategoryContent } from '../../utils/category-content';
 import { fallbackImage } from '../../utils/category-content';
 import { useTaxonomyRoute } from '../../composables/useTaxonomyRoute';
 import { useFlowAnswers } from '../../utils/usePageFlow';
+import { isValidEmail, isValidFullName, isValidZipcode, normalizeFullName } from '../../utils/form-validation';
 
 defineProps<{ content: CategoryContent }>();
 
@@ -11,13 +12,35 @@ const answers = useFlowAnswers();
 const { category } = useTaxonomyRoute();
 const imageFailed = ref(false);
 const questionModalOpen = ref(false);
+const formError = ref('');
 
 const bullets = ['100% free to get started', 'No obligations, cancel anytime', 'Trusted and vetted contractors only'];
 
 const submit = () => {
   if (!category.value || !answers.value.subcategory) return;
+  const fullName = normalizeFullName(answers.value.fullName);
+  const email = answers.value.email.trim();
+  const zipcode = answers.value.zipcode.trim();
+
+  if (!isValidFullName(fullName)) {
+    formError.value = 'Enter your first and last name.';
+    return;
+  }
+  if (!isValidEmail(email)) {
+    formError.value = 'Enter a valid email address.';
+    return;
+  }
+  if (!isValidZipcode(zipcode)) {
+    formError.value = 'Enter a 5-digit ZIP code.';
+    return;
+  }
+
   answers.value.category = category.value.name;
   answers.value.categoryId = category.value.id;
+  answers.value.fullName = fullName;
+  answers.value.email = email;
+  answers.value.zipcode = zipcode;
+  formError.value = '';
   questionModalOpen.value = true;
 };
 </script>
@@ -68,6 +91,7 @@ const submit = () => {
               v-model="answers.fullName"
               type="text"
               autocomplete="name"
+              required
               class="rounded-lg border border-black/15 px-3 py-2.5 text-sm outline-none transition focus:border-[var(--cc-brand-blue)]"
             />
           </label>
@@ -78,6 +102,7 @@ const submit = () => {
               v-model="answers.email"
               type="email"
               autocomplete="email"
+              required
               class="rounded-lg border border-black/15 px-3 py-2.5 text-sm outline-none transition focus:border-[var(--cc-brand-blue)]"
             />
           </label>
@@ -90,9 +115,14 @@ const submit = () => {
               inputmode="numeric"
               autocomplete="postal-code"
               placeholder="E.g. 90210"
+              pattern="[0-9]{5}"
+              maxlength="5"
+              required
               class="rounded-lg border border-black/15 px-3 py-2.5 text-sm outline-none transition focus:border-[var(--cc-brand-blue)]"
             />
           </label>
+
+          <p v-if="formError" class="text-sm text-red-600" role="alert">{{ formError }}</p>
 
           <button
             type="submit"
