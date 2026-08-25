@@ -31,7 +31,7 @@ const steps = [
         </article>
       </div>
       <div class="mt-8 text-center">
-        <a href="#get-started" class="inline-block rounded-full bg-[var(--cc-yellow)] px-6 py-3 text-sm font-semibold text-[var(--cc-charcoal)] transition hover:bg-[#ffcc0f]">Get a quote today</a>
+        <a href="#get-started" class="inline-block rounded-[5px] bg-[var(--cc-yellow)] px-6 py-3 text-sm font-semibold text-[var(--cc-charcoal)] transition hover:bg-[#ffcc0f]">Get a quote today</a>
       </div>
     </div>
   </section>

@@ -13,10 +13,8 @@ const imageFailed = ref(false);
     <div class="bg-[linear-gradient(135deg,#ffd11f_0%,#ffdf5c_55%,#ffeb9a_100%)] pb-28 pt-6 md:pb-32">
       <div class="cc-container">
         <nav class="flex items-center justify-between">
-          <NuxtLink to="/" class="flex items-center gap-2 text-sm font-extrabold uppercase tracking-[0.18em]">
-            <span class="inline-block h-3 w-3 rotate-45 bg-[var(--cc-charcoal)]" />
-            Contractors
-            <span class="text-[10px] font-semibold tracking-normal text-[var(--cc-ink-soft)]">.com</span>
+          <NuxtLink to="/" class="flex items-center">
+            <img src="/images/cc-header-logo.svg" alt="Contractors.com" class="h-8 w-auto md:h-9" />
           </NuxtLink>
           <div class="flex items-center gap-5">
             <a href="#category-services" class="hidden text-sm font-medium transition hover:opacity-60 sm:block">Browse Projects</a>

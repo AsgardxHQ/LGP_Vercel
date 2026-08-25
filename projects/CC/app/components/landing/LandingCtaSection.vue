@@ -65,7 +65,7 @@ const submit = async () => {
             @input="onZipInput"
           />
           <p v-if="zipcodeError" class="text-sm text-red-600" role="alert">{{ zipcodeError }}</p>
-          <button type="submit" class="mt-1 block rounded-lg bg-[var(--cc-yellow)] px-4 py-2.5 text-center text-sm font-semibold text-[var(--cc-charcoal)] transition hover:bg-[#ffca0d]">Get quotes</button>
+          <button type="submit" class="mt-1 block rounded-[5px] bg-[var(--cc-yellow)] px-4 py-2.5 text-center text-sm font-semibold text-[var(--cc-charcoal)] transition hover:bg-[#ffca0d]">Get quotes</button>
         </form>
         <p class="mt-3 text-xs text-black/50">By submitting, you agree to our terms and privacy policy.</p>
       </div>

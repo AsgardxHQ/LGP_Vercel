@@ -259,10 +259,10 @@ watch(currentAnswer, (value) => {
           <p v-if="formError" class="mt-3 text-xs font-semibold text-red-600">{{ formError }}</p>
 
           <div class="mt-auto flex items-center justify-end gap-3 pt-8">
-            <button v-if="currentIndex > 0" class="px-5 py-4 text-center text-xs border rounded font-bold text-[var(--cc-charcoal)] transition cursor-pointer" type="button" @click="goBack">
+            <button v-if="currentIndex > 0" class="px-5 py-4 text-center text-xs border rounded-[5px] font-bold text-[var(--cc-charcoal)] transition cursor-pointer" type="button" @click="goBack">
               <span class="text-base leading-none">&larr;</span>
             </button>
-            <button class="bg-[var(--cc-yellow)] px-5 py-4 rounded text-xs font-bold text-[var(--cc-charcoal)] transition cursor-pointer hover:bg-[#f7c900] disabled:cursor-not-allowed disabled:opacity-50" type="submit" :disabled="currentQuestion.id === 'email' ? draftEmail.trim().length === 0 || draftPhone.trim().length === 0 : draftValue.trim().length === 0">
+            <button class="bg-[var(--cc-yellow)] px-5 py-4 rounded-[5px] text-xs font-bold text-[var(--cc-charcoal)] transition cursor-pointer hover:bg-[#f7c900] disabled:cursor-not-allowed disabled:opacity-50" type="submit" :disabled="currentQuestion.id === 'email' ? draftEmail.trim().length === 0 || draftPhone.trim().length === 0 : draftValue.trim().length === 0">
               Continue <span class="ml-3 text-base leading-none">&rarr;</span>
             </button>
           </div>

@@ -22,10 +22,7 @@ const columns = [
     <div class="cc-container">
       <div class="flex flex-col gap-8 md:flex-row md:justify-between">
         <div>
-          <p class="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.22em] text-white">
-            <span class="inline-block h-2 w-2 rotate-45 bg-[var(--cc-yellow)]" />
-            Contractors
-          </p>
+          <img src="/images/cc-footer-logo-inverted.svg" alt="Contractors.com" class="h-8 w-auto md:h-9" />
           <p class="mt-3 text-sm text-white/60">Connecting homeowners with trusted local pros.</p>
         </div>
 
