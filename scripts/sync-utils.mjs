@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const sourceDir = join(rootDir, 'app', 'utils');
 const projectsDir = join(rootDir, 'projects');
-const sharedFiles = ['form-validation.ts', 'taxonomy-routes.ts', 'index.ts'];
+const sharedFiles = ['form-validation.ts', 'taxonomy-routes.ts', 'index.ts', 'lead-submission.ts'];
 
 const isDirectory = async (path) => {
   try {

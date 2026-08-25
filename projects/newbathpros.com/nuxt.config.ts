@@ -15,6 +15,11 @@ export default defineNuxtConfig({
   imports: {
     dirs: [sharedSource]
   },
+  runtimeConfig: {
+    public: {
+      leadApiUrl: process.env.NUXT_PUBLIC_LEAD_API_URL || ''
+    }
+  },
   css: ['~/assets/css/main.css'],
   vite: {
     plugins: [tailwindcss()]

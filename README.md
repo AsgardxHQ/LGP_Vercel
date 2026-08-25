@@ -36,6 +36,22 @@ Those generated files are ignored by Git. Local `npm run dev` does not copy
 anything: it resolves shared utilities and taxonomy data directly from the
 repository root, so edit the root files during development.
 
+## Lead Delivery
+
+The root application exposes `POST /api/lead`. Each site sends its completed
+flow answers to the root API URL configured with `NUXT_PUBLIC_LEAD_API_URL`.
+Set these server-only environment variables on the root Vercel project:
+
+```bash
+NUXT_LEAD_WEBHOOK_URL=https://your-backend.example.com/leads
+NUXT_LEAD_API_KEY=your-secret-api-key
+```
+
+The root API validates `{ site, answers }` and forwards it to the webhook with
+the API key in an `Authorization: Bearer` header. Set
+`NUXT_PUBLIC_LEAD_API_URL=https://your-root-app.example.com/api/lead` on each
+site Vercel project. Do not set `NUXT_LEAD_API_KEY` on a site project.
+
 ## Setup
 
 Make sure to install dependencies:

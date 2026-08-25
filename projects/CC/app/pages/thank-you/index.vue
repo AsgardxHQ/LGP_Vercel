@@ -1,6 +1,14 @@
 <script setup lang="ts">
 const answers = useFlowAnswers();
 
+onMounted(async () => {
+  try {
+    await submitLead('CC', answers.value);
+  } catch (error) {
+    console.error('Lead submission failed', error);
+  }
+});
+
 const popularCategories = [
   { label: 'Kitchen Remodel', icon: '▤', slug: 'kitchen' },
   { label: 'Gutters', icon: '⌁', slug: 'gutters' },

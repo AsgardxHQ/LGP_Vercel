@@ -1,5 +1,13 @@
 <script setup>
 const answers = useFlowAnswers();
+
+onMounted(async () => {
+  try {
+    await submitLead('contractors.com', answers.value);
+  } catch (error) {
+    console.error('Lead submission failed', error);
+  }
+});
 </script>
 
 <template>

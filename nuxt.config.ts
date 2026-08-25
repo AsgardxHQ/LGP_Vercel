@@ -17,7 +17,9 @@ export default defineNuxtConfig({
     // projects live under a team) so the dashboard can resolve live deployment
     // links via the Vercel API.
     vercelApiToken: process.env.NUXT_VERCEL_API_TOKEN || '',
-    vercelTeamId: process.env.NUXT_VERCEL_TEAM_ID || ''
+    vercelTeamId: process.env.NUXT_VERCEL_TEAM_ID || '',
+    leadWebhookUrl: process.env.NUXT_LEAD_WEBHOOK_URL || '',
+    leadApiKey: process.env.NUXT_LEAD_API_KEY || '/api/lead',
   },
   vite: {
     plugins: [tailwindcss()]
@@ -36,6 +38,9 @@ export default defineNuxtConfig({
     }
   },
   nitro: {
+    routeRules: {
+      '/api/lead': { cors: true }
+    },
     // Bundles these into the deployed function on every preset (incl. Vercel),
     // where process.cwd()-relative fs reads of source folders aren't available.
     serverAssets: [
