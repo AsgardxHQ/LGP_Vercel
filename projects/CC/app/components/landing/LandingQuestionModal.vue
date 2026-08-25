@@ -3,6 +3,7 @@ import { computed, nextTick, ref, watch } from 'vue'
 import { siteFlowConfig } from '../../utils/site-taxonomy'
 import { pathForPageName } from '../../utils/page-flow'
 import { useFlowAnswers } from '../../utils/usePageFlow'
+import { isValidEmail, isValidFullName, isValidUsPhone, isValidZipcode, normalizeFullName } from '#shared-utils/form-validation'
 
 const props = defineProps<{
   open: boolean
@@ -18,6 +19,7 @@ const currentIndex = ref(0)
 const draftValue = ref('')
 const draftEmail = ref('')
 const draftPhone = ref('')
+const formError = ref('')
 const inputElement = ref<HTMLInputElement | null>(null)
 
 const questions = siteFlowConfig.questions.filter((question) => question.id !== 'phone')
@@ -84,6 +86,7 @@ const syncQuestion = async () => {
   draftValue.value = String(currentAnswer.value ?? '')
   draftEmail.value = answers.value.email
   draftPhone.value = answers.value.phone
+  formError.value = ''
   await nextTick()
   inputElement.value?.focus()
 }
@@ -99,22 +102,45 @@ const goBack = async () => {
   draftValue.value = String(currentAnswer.value ?? '')
   draftEmail.value = answers.value.email
   draftPhone.value = answers.value.phone
+  formError.value = ''
   await nextTick()
   inputElement.value?.focus()
 }
 
 const submit = async () => {
   if (currentQuestion.value?.id === 'email') {
-    if (draftEmail.value.trim().length === 0 || draftPhone.value.trim().length === 0) return
-    answers.value.email = draftEmail.value.trim()
-    answers.value.phone = draftPhone.value.trim()
+    const email = draftEmail.value.trim()
+    const phone = draftPhone.value.trim()
+    if (!isValidEmail(email)) {
+      formError.value = 'Enter a valid email address.'
+      return
+    }
+    if (!isValidUsPhone(phone)) {
+      formError.value = 'Enter a valid phone number.'
+      return
+    }
+    answers.value.email = email
+    answers.value.phone = phone
+    formError.value = ''
     currentIndex.value += 1
     await syncQuestion()
     return
   }
 
-  const value = draftValue.value.trim()
+  let value = draftValue.value.trim()
   if (!value || !answerKey.value) return
+
+  if (currentQuestion.value?.id === 'zipcode' && !isValidZipcode(value)) {
+    formError.value = 'Enter a 5-digit ZIP code.'
+    return
+  }
+  if (currentQuestion.value?.id === 'fullname') {
+    value = normalizeFullName(value)
+    if (!isValidFullName(value)) {
+      formError.value = 'Enter your first and last name.'
+      return
+    }
+  }
 
   const key = answerKey.value as keyof typeof answers.value
   answers.value[key] = value
@@ -124,6 +150,7 @@ const submit = async () => {
     answers.value.subcategory = ''
   }
 
+  formError.value = ''
   currentIndex.value += 1
   await syncQuestion()
 }
@@ -141,6 +168,7 @@ watch(() => props.open, (isOpen) => {
     draftValue.value = ''
     draftEmail.value = answers.value.email
     draftPhone.value = answers.value.phone
+    formError.value = ''
     syncQuestion()
   }
 })
@@ -207,6 +235,8 @@ watch(currentAnswer, (value) => {
             :placeholder="currentQuestion.label"
             required
           >
+
+          <p v-if="formError" class="mt-3 text-xs font-semibold text-red-600">{{ formError }}</p>
 
           <div class="mt-auto flex items-center justify-end gap-3 pt-8">
             <button v-if="currentIndex > 0" class="px-5 py-4 text-center text-xs border rounded font-bold text-[var(--cc-charcoal)] transition cursor-pointer" type="button" @click="goBack">
