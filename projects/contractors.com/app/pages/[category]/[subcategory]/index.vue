@@ -1,6 +1,6 @@
 <script setup>
 import { baseConfig } from '@/utils/page-flow';
-import { findCategoryBySlug, findSubcategoryBySlug } from '@/utils';
+import { findCategoryBySlug, findSubcategoryBySlug } from '#shared-utils/taxonomy-routes';
 
 const route = useRoute();
 const answers = useFlowAnswers();

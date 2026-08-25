@@ -21,6 +21,21 @@ npm run generate:sites
 Individual sites can still be run from their own directory with `npm run dev` or
 `npm run build`.
 
+## Standalone Vercel Sites
+
+Create one Vercel project per directory under `projects/*` and set its **Root
+Directory** to that site's directory. In Vercel, enable **Include files outside
+the root directory in the Build Step**. The site's `npm run build` command then
+copies shared root files before Nuxt builds:
+
+- `app/utils/*` is copied to `app/utils/shared/`.
+- `server/utils/shared/*` is copied to `server/utils/shared/`.
+- `HI_taxonomy.json` is copied to the site root.
+
+Those generated files are ignored by Git. Local `npm run dev` does not copy
+anything: it resolves shared utilities and taxonomy data directly from the
+repository root, so edit the root files during development.
+
 ## Setup
 
 Make sure to install dependencies:

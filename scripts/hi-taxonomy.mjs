@@ -15,7 +15,9 @@ const isDirectory = async (path) => {
 };
 
 const { readdir } = await import('node:fs/promises');
-const projectNames = await readdir(projectsDir);
+const projectNames = process.env.LGP_PROJECT_NAME
+  ? [process.env.LGP_PROJECT_NAME]
+  : await readdir(projectsDir);
 const copiedProjects = [];
 
 for (const projectName of projectNames) {

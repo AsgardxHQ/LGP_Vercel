@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { siteTaxonomy } from '../../utils/page-flow';
 import { useFlowAnswers } from '../../utils/usePageFlow';
 import { useCategorySelection } from '../../composables/useCategorySelection';
-import { isValidZipcode } from '@/utils';
+import { isValidZipcode } from '#shared-utils/form-validation';
 
 const answers = useFlowAnswers();
 const { selectCategory } = useCategorySelection();

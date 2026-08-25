@@ -3,9 +3,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
+    "build": "LGP_PROJECT_NAME=CC node ../../scripts/sync.mjs && LGP_SHARED_SOURCE=copied nuxt build",
+    "dev": "LGP_SHARED_SOURCE=root nuxt dev",
+    "generate": "LGP_PROJECT_NAME=CC node ../../scripts/sync.mjs && LGP_SHARED_SOURCE=copied nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },

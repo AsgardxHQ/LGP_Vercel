@@ -1,6 +1,6 @@
 <script setup>
 import { baseConfig } from '@/utils/page-flow';
-import { categoryPath } from '@/utils';
+import { categoryPath } from '#shared-utils/taxonomy-routes';
 
 const answers = useFlowAnswers();
 const { goPrevious } = usePageFlow('categories');

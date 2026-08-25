@@ -1,5 +1,5 @@
 import baseConfigRaw from '../base.conf?raw';
-import taxonomy from '../../HI_taxonomy.json';
+import taxonomy from '#shared-taxonomy';
 
 const baseConfig = JSON.parse(baseConfigRaw);
 
