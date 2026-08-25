@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { findSubcategoryId } from '../../../utils/site-taxonomy';
+import { useFlowAnswers, usePageFlow } from '../../../utils/usePageFlow';
+import { useTaxonomyRoute } from '../../../composables/useTaxonomyRoute';
+
 const answers = useFlowAnswers();
 const { category, subcategory } = useTaxonomyRoute();
 const { goNext, goPrevious } = usePageFlow('subcategories');
@@ -7,7 +11,10 @@ if (category.value) {
   answers.value.category = category.value.name;
   answers.value.categoryId = category.value.id;
 }
-if (subcategory.value) answers.value.subcategory = subcategory.value;
+if (subcategory.value) {
+  answers.value.subcategory = subcategory.value;
+  answers.value.subcategoryId = category.value ? findSubcategoryId(category.value.sourceName, subcategory.value) : '';
+}
 </script>
 
 <template>

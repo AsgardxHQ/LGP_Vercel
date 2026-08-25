@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { CategoryContent } from '../../utils/category-content';
 import { useFlowAnswers } from '../../utils/usePageFlow';
+import { sanitizeZipInput } from '#shared-utils/form-validation';
 
 defineProps<{ content: CategoryContent }>();
 
@@ -9,6 +10,10 @@ const answers = useFlowAnswers();
 const submit = () => {
   const target = document.getElementById('category-quote');
   target?.scrollIntoView({ behavior: 'smooth' });
+};
+
+const onZipInput = (event: Event) => {
+  answers.value.zipcode = sanitizeZipInput((event.target as HTMLInputElement).value);
 };
 </script>
 
@@ -20,12 +25,14 @@ const submit = () => {
 
         <form class="flex w-full max-w-md flex-col gap-3 sm:flex-row" @submit.prevent="submit">
           <input
-            v-model="answers.zipcode"
+            :value="answers.zipcode"
             type="text"
             inputmode="numeric"
             autocomplete="postal-code"
             placeholder="Enter your zip code"
+            maxlength="5"
             class="w-full rounded-lg border border-black/10 bg-white px-4 py-3 text-sm outline-none transition focus:border-[var(--cc-charcoal)]"
+            @input="onZipInput"
           />
           <button
             type="submit"

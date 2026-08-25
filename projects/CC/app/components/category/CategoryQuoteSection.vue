@@ -4,7 +4,8 @@ import type { CategoryContent } from '../../utils/category-content';
 import { fallbackImage } from '../../utils/category-content';
 import { useTaxonomyRoute } from '../../composables/useTaxonomyRoute';
 import { useFlowAnswers } from '../../utils/usePageFlow';
-import { isValidEmail, isValidFullName, isValidZipcode, normalizeFullName } from '#shared-utils/form-validation';
+import { findSubcategoryId } from '../../utils/site-taxonomy';
+import { isValidEmail, isValidFullName, isValidZipcode, normalizeFullName, sanitizeZipInput } from '#shared-utils/form-validation';
 
 defineProps<{ content: CategoryContent }>();
 
@@ -37,11 +38,16 @@ const submit = () => {
 
   answers.value.category = category.value.name;
   answers.value.categoryId = category.value.id;
+  answers.value.subcategoryId = findSubcategoryId(category.value.sourceName, answers.value.subcategory);
   answers.value.fullName = fullName;
   answers.value.email = email;
   answers.value.zipcode = zipcode;
   formError.value = '';
   questionModalOpen.value = true;
+};
+
+const onZipInput = (event: Event) => {
+  answers.value.zipcode = sanitizeZipInput((event.target as HTMLInputElement).value);
 };
 </script>
 
@@ -110,15 +116,15 @@ const submit = () => {
           <label class="grid gap-1.5">
             <span class="text-xs font-semibold text-[var(--cc-ink-soft)]">Zip code</span>
             <input
-              v-model="answers.zipcode"
+              :value="answers.zipcode"
               type="text"
               inputmode="numeric"
               autocomplete="postal-code"
               placeholder="E.g. 90210"
-              pattern="[0-9]{5}"
               maxlength="5"
               required
               class="rounded-lg border border-black/15 px-3 py-2.5 text-sm outline-none transition focus:border-[var(--cc-brand-blue)]"
+              @input="onZipInput"
             />
           </label>
 

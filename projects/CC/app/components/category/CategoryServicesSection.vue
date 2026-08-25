@@ -4,6 +4,7 @@ import type { CategoryContent } from '../../utils/category-content';
 import { fallbackImage } from '../../utils/category-content';
 import { useTaxonomyRoute } from '../../composables/useTaxonomyRoute';
 import { useFlowAnswers } from '../../utils/usePageFlow';
+import { findSubcategoryId } from '../../utils/site-taxonomy';
 
 const props = defineProps<{ content: CategoryContent }>();
 
@@ -25,6 +26,7 @@ const selectSubcategory = (name: string) => {
   answers.value.category = category.value.name;
   answers.value.categoryId = category.value.id;
   answers.value.subcategory = name;
+  answers.value.subcategoryId = findSubcategoryId(category.value.sourceName, name);
   questionModalOpen.value = true;
 };
 </script>

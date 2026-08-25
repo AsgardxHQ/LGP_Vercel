@@ -28,3 +28,4 @@ logs
 projects/*/HI_taxonomy.json
 projects/*/app/utils/shared/
 projects/*/server/utils/shared/
+projects/*/server/api/lead.post.ts

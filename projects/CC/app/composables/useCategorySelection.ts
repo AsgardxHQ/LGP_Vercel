@@ -14,6 +14,7 @@ export const useCategorySelection = () => {
     answers.value.category = category.name;
     answers.value.categoryId = category.id;
     answers.value.subcategory = '';
+    answers.value.subcategoryId = '';
 
     return router.push(categoryPath(category.name));
   };

@@ -1,6 +1,6 @@
 import { computed } from 'vue';
 import { baseConfig, flowPageIndex, flowPages, pathForPageName } from './page-flow';
-import { categoryPath, resolveTaxonomyRoute } from '@/utils';
+import { categoryPath, resolveTaxonomyRoute } from './taxonomy-routes';
 
 export type FlowAnswers = {
   zipcode: string;
@@ -43,8 +43,8 @@ export const usePageFlow = (currentName: string) => {
     let nextIndex = currentIndex + 1;
     while (
       nextIndex < flowPages.length &&
-      ((flowPages[nextIndex].name === 'categories' && answers.value.category) ||
-        (flowPages[nextIndex].name === 'subcategories' && answers.value.subcategory))
+      (((flowPages as any)[nextIndex].name === 'categories' && answers.value.category) ||
+        ((flowPages as any)[nextIndex].name === 'subcategories' && answers.value.subcategory))
     ) {
       nextIndex += 1;
     }

@@ -3,11 +3,15 @@ import { ref } from 'vue';
 import { siteTaxonomy } from '../../utils/page-flow';
 import { useFlowAnswers } from '../../utils/usePageFlow';
 import { useCategorySelection } from '../../composables/useCategorySelection';
-import { isValidZipcode } from '#shared-utils/form-validation';
+import { isValidZipcode, sanitizeZipInput } from '#shared-utils/form-validation';
 
 const answers = useFlowAnswers();
 const { selectCategory } = useCategorySelection();
 const zipcodeError = ref('');
+
+const onZipInput = (event: Event) => {
+  answers.value.zipcode = sanitizeZipInput((event.target as HTMLInputElement).value);
+};
 
 const submit = async () => {
   if (answers.value.category.trim().length === 0) return;
@@ -50,15 +54,15 @@ const submit = async () => {
             </option>
           </select>
           <input
-            v-model="answers.zipcode"
+            :value="answers.zipcode"
             class="rounded-lg border border-black/15 px-3 py-2 text-sm outline-none transition focus:border-[var(--cc-brand-blue)]"
             type="text"
             inputmode="numeric"
             autocomplete="postal-code"
-            pattern="[0-9]{5}"
             maxlength="5"
             placeholder="ZIP code"
             required
+            @input="onZipInput"
           />
           <p v-if="zipcodeError" class="text-sm text-red-600" role="alert">{{ zipcodeError }}</p>
           <button type="submit" class="mt-1 block rounded-lg bg-[var(--cc-yellow)] px-4 py-2.5 text-center text-sm font-semibold text-[var(--cc-charcoal)] transition hover:bg-[#ffca0d]">Get quotes</button>

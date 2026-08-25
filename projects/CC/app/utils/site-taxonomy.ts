@@ -20,6 +20,7 @@ export type SiteFlowConfig = {
 };
 
 type HiSubcategory = {
+  id: string;
   name: string;
 };
 
@@ -45,6 +46,10 @@ const findCategory = (name: string) => hiCategories.find((category) => category.
 
 const subcategoryNames = (categoryName: string) =>
   findCategory(categoryName)?.subCategories?.map((subcategory) => subcategory.name) ?? [];
+
+/** Looks up a subcategory's taxonomy id by its parent category source name and subcategory name. */
+export const findSubcategoryId = (categorySourceName: string, subcategoryName: string) =>
+  findCategory(categorySourceName)?.subCategories?.find((subcategory) => subcategory.name === subcategoryName)?.id ?? '';
 
 const roofingSubcategories = subcategoryNames('Roofing');
 const gutterSubcategories = roofingSubcategories.filter((name) => /gutter/i.test(name));

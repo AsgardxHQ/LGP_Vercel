@@ -1,5 +1,6 @@
 import { computed } from 'vue';
 import { flowPageIndex, flowPages, pathForPageName, siteTaxonomy, type FlowPageName } from './page-flow';
+import { findSubcategoryId } from './site-taxonomy';
 import { resolveTaxonomyRoute } from '#shared-utils/taxonomy-routes';
 
 export type FlowAnswers = {
@@ -7,6 +8,7 @@ export type FlowAnswers = {
   category: string;
   categoryId: string;
   subcategory: string;
+  subcategoryId: string;
   ownership: string;
   fullName: string;
   email: string;
@@ -19,6 +21,7 @@ export const useFlowAnswers = () => useState<FlowAnswers>('cc-flow-answers', () 
   category: '',
   categoryId: '',
   subcategory: '',
+  subcategoryId: '',
   ownership: '',
   fullName: '',
   email: '',
@@ -36,7 +39,12 @@ export const usePageFlow = (currentName: FlowPageName) => {
     answers.value.category = routeTaxonomy.category.name;
     answers.value.categoryId = routeTaxonomy.category.id;
   }
-  if (routeTaxonomy.subcategory) answers.value.subcategory = routeTaxonomy.subcategory;
+  if (routeTaxonomy.subcategory) {
+    answers.value.subcategory = routeTaxonomy.subcategory;
+    answers.value.subcategoryId = routeTaxonomy.category
+      ? findSubcategoryId(routeTaxonomy.category.sourceName, routeTaxonomy.subcategory)
+      : '';
+  }
 
   const currentIndex = flowPageIndex(currentName);
   const nextPage = computed(() => {

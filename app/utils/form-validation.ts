@@ -4,6 +4,8 @@ const phonePattern = /^\(\d{3}\) \d{3}-\d{4}$/;
 
 export const isValidZipcode = (value: string) => /^\d{5}$/.test(value.trim());
 
+export const sanitizeZipInput = (value: string) => value.replace(/\D/g, '').slice(0, 5);
+
 export const normalizeFullName = (value: string) => value.trim().replace(/\s+/g, ' ');
 
 export const isValidFullName = (value: string) => fullNamePattern.test(normalizeFullName(value));

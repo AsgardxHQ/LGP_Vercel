@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue'
-import { siteFlowConfig } from '../../utils/site-taxonomy'
+import { findSubcategoryId, siteFlowConfig } from '../../utils/site-taxonomy'
 import { pathForPageName } from '../../utils/page-flow'
 import { useFlowAnswers } from '../../utils/usePageFlow'
-import { isValidEmail, isValidFullName, isValidUsPhone, isValidZipcode, normalizeFullName } from '#shared-utils/form-validation'
+import { formatUsPhone, isValidEmail, isValidFullName, isValidUsPhone, isValidZipcode, normalizeFullName, sanitizeZipInput } from '#shared-utils/form-validation'
 
 const props = defineProps<{
   open: boolean
@@ -96,6 +96,15 @@ const choose = (value: string) => {
   submit()
 }
 
+const onDraftValueInput = (event: Event) => {
+  const rawValue = (event.target as HTMLInputElement).value
+  draftValue.value = currentQuestion.value?.id === 'zipcode' ? sanitizeZipInput(rawValue) : rawValue
+}
+
+const onDraftPhoneInput = (event: Event) => {
+  draftPhone.value = formatUsPhone((event.target as HTMLInputElement).value)
+}
+
 const goBack = async () => {
   if (currentIndex.value <= 0) return
   currentIndex.value -= 1
@@ -148,6 +157,11 @@ const submit = async () => {
     const category = siteFlowConfig.categories.find((item) => item.name === value)
     answers.value.categoryId = category?.id ?? ''
     answers.value.subcategory = ''
+    answers.value.subcategoryId = ''
+  }
+  if (key === 'subcategory') {
+    const category = siteFlowConfig.categories.find((item) => item.name === answers.value.category)
+    answers.value.subcategoryId = category ? findSubcategoryId(category.sourceName, value) : ''
   }
 
   formError.value = ''
@@ -204,12 +218,15 @@ watch(currentAnswer, (value) => {
               required
             >
             <input
-              v-model="draftPhone"
+              :value="draftPhone"
               class="w-full border border-[#d6d7d3] rounded px-3 py-4 text-sm outline-none placeholder:text-[#777b76] focus:border-[#2361a8]"
               type="tel"
-              placeholder="Phone number"
+              inputmode="numeric"
+              placeholder="(xxx) xxx-xxxx"
               autocomplete="tel"
+              maxlength="14"
               required
+              @input="onDraftPhoneInput"
             >
           </div>
           <div v-else-if="currentOptions.length" class="grid max-h-[360px] gap-3 overflow-y-auto pr-1" role="radiogroup">
@@ -229,11 +246,14 @@ watch(currentAnswer, (value) => {
           <input
             v-else
             ref="inputElement"
-            v-model="draftValue"
+            :value="draftValue"
             class="w-full border border-[#d6d7d3] rounded px-3 py-4 text-sm outline-none placeholder:text-[#777b76] focus:border-[#2361a8]"
             :type="currentQuestion.id === 'phone' ? 'tel' : 'text'"
+            :inputmode="currentQuestion.id === 'zipcode' ? 'numeric' : undefined"
+            :maxlength="currentQuestion.id === 'zipcode' ? 5 : undefined"
             :placeholder="currentQuestion.label"
             required
+            @input="onDraftValueInput"
           >
 
           <p v-if="formError" class="mt-3 text-xs font-semibold text-red-600">{{ formError }}</p>

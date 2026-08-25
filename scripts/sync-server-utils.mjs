@@ -1,10 +1,16 @@
-import { cp, mkdir, readdir, stat } from 'node:fs/promises';
+import { cp, mkdir, readdir, stat, writeFile } from 'node:fs/promises';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const sourceDir = join(rootDir, 'server', 'utils', 'shared');
 const projectsDir = join(rootDir, 'projects');
+
+// Thin re-export entry points generated into each project's server/api/ so
+// Nitro registers the route locally, backed by the shared handler logic.
+const sharedApiEndpoints = {
+  'lead.post.ts': "export { default } from '../utils/shared/lead';\n"
+};
 
 const isDirectory = async (path) => {
   try {
@@ -27,8 +33,16 @@ for (const projectName of projectNames) {
   const targetDir = join(projectDir, 'server', 'utils', 'shared');
   await mkdir(targetDir, { recursive: true });
   await cp(sourceDir, targetDir, { recursive: true, filter: (src) => !src.endsWith('README.md') });
+
+  const apiDir = join(projectDir, 'server', 'api');
+  await mkdir(apiDir, { recursive: true });
+  await Promise.all(
+    Object.entries(sharedApiEndpoints).map(([fileName, content]) => writeFile(join(apiDir, fileName), content))
+  );
+
   syncedProjects.push(projectName);
 }
+
 
 if (syncedProjects.length === 0) {
   console.log('No project directories found.');

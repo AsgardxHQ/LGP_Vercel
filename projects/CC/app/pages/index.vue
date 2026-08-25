@@ -14,6 +14,7 @@ answers.value = {
   category: '',
   categoryId: '',
   subcategory: '',
+  subcategoryId: '',
   ownership: '',
   fullName: '',
   email: '',
