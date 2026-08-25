@@ -1,5 +1,5 @@
 import { computed } from 'vue';
-import { resolveTaxonomyRoute } from '../utils/taxonomy-routes';
+import { resolveTaxonomyRoute } from '@/utils';
 import { siteTaxonomy } from '../utils/page-flow';
 
 /** Resolves taxonomy entities behind dynamic category routes. */

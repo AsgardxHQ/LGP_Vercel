@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { isValidFullName, normalizeFullName } from '../../../utils/form-validation';
+import { isValidFullName, normalizeFullName } from '@/utils';
 
 const answers = useFlowAnswers();
 const { goNext, goPrevious } = usePageFlow('fullname');

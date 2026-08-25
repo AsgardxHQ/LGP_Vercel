@@ -1,4 +1,4 @@
-import { slugify } from './taxonomy-routes';
+import { slugify } from '@/utils';
 
 export type CategoryBenefit = { title: string; body: string };
 export type CategoryTestimonial = { quote: string; name: string; location: string };

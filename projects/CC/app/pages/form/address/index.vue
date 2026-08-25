@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { isNonEmpty } from '../../../utils/form-validation';
+import { isNonEmpty } from '@/utils';
 
 const answers = useFlowAnswers();
 const { goNext, goPrevious } = usePageFlow('address');

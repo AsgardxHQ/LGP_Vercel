@@ -1,5 +1,5 @@
 import { siteFlowConfig } from '../utils/site-taxonomy';
-import { categoryPath, findCategoryBySlug } from '../utils/taxonomy-routes';
+import { categoryPath, findCategoryBySlug } from '@/utils';
 import { useFlowAnswers } from '../utils/usePageFlow';
 
 /** Stores the picked category name/id and routes to its landing page. */

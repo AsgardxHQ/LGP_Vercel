@@ -4,7 +4,7 @@ import type { CategoryContent } from '../../utils/category-content';
 import { fallbackImage } from '../../utils/category-content';
 import { useTaxonomyRoute } from '../../composables/useTaxonomyRoute';
 import { useFlowAnswers } from '../../utils/usePageFlow';
-import { isValidEmail, isValidFullName, isValidZipcode, normalizeFullName } from '../../utils/form-validation';
+import { isValidEmail, isValidFullName, isValidZipcode, normalizeFullName } from '@/utils';
 
 defineProps<{ content: CategoryContent }>();
 

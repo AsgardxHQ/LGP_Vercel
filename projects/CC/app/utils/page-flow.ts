@@ -1,4 +1,4 @@
-import { categoryPath } from './taxonomy-routes';
+import { categoryPath } from '@/utils';
 import { siteFlowConfig } from './site-taxonomy';
 import type { FlowAnswers } from './usePageFlow';
 

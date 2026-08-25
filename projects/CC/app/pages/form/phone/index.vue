@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { formatUsPhone, isValidUsPhone } from '../../../utils/form-validation';
+import { formatUsPhone, isValidUsPhone } from '@/utils';
 
 const answers = useFlowAnswers();
 const { goNext, goPrevious } = usePageFlow('phone');

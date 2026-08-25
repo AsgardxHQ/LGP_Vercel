@@ -1,6 +1,6 @@
 import { computed } from 'vue';
 import { flowPageIndex, flowPages, pathForPageName, siteTaxonomy, type FlowPageName } from './page-flow';
-import { resolveTaxonomyRoute } from './taxonomy-routes';
+import { resolveTaxonomyRoute } from '@/utils';
 
 export type FlowAnswers = {
   zipcode: string;

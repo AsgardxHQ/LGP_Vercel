@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { isValidEmail } from '../../../utils/form-validation';
+import { isValidEmail } from '@/utils';
 
 const answers = useFlowAnswers();
 const { goNext, goPrevious } = usePageFlow('email');

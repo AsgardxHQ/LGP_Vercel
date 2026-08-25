@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { isValidZipcode } from '../../../utils/form-validation';
+import { isValidZipcode } from '@/utils';
 
 const answers = useFlowAnswers();
 const { goNext } = usePageFlow('zipcode');
